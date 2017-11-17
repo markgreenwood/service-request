@@ -1,1 +1,0 @@
-const hapi = require('hapi');
