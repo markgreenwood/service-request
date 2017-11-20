@@ -7,11 +7,11 @@ function serviceRequest(requestConfig) {
   const version = R.propOr(null, 'version', requestConfig);
   let serviceUrl = 'badUrl';
 
-  if (name === 'testService' && version === '1.0.0') { serviceUrl = 'test.service.com:4242' }
+  if (name === 'testService' && version === '1.0.0') { serviceUrl = 'http://test.service.com:4242' + requestConfig.endpoint }
 
-  console.log(`serviceUrl: ${serviceUrl}`);
+  console.log(`serviceUrl: ${serviceUrl}\nrequestConfig: ${JSON.stringify(requestConfig, null, 2)}`);
   return got(serviceUrl, requestConfig);
 }
 
-module.exports = requestConfig => Promise.resolve(serviceRequest(requestConfig));
+module.exports = serviceRequest;
 

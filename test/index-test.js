@@ -2,6 +2,7 @@ const assert = require('assert');
 const format = require('util').format;
 const nock = require('nock');
 const serviceRequest = require('../index');
+const config = require('config');
 
 describe('consul-client/bluebird', function() {
   const host = 'my.service.discovery.host.com';
@@ -13,7 +14,7 @@ describe('consul-client/bluebird', function() {
   const requestConfig = {
     serviceName: 'testService',
     version: '1.0.0',
-    endpoint: 'endpoint',
+    endpoint: '/endpoint',
     method: 'GET'
   };
 
@@ -31,9 +32,9 @@ describe('consul-client/bluebird', function() {
   );
 
   // Health check call responds with one healthy service.
-  nock(hostUrl)
-    .get(healthUrl)
-    .reply(200, [{Service: {Tags: ['1.0.0'], Address: address, Port: port}}]);
+  // nock(hostUrl)
+  //   .get(healthUrl)
+  //   .reply(200, [{Service: {Tags: ['1.0.0'], Address: address, Port: port}}]);
 
   it('makes a GET request to consul service if no proxy specified', () => {
     nock(serviceUrl)
@@ -42,8 +43,8 @@ describe('consul-client/bluebird', function() {
 
     return serviceRequest(requestConfig)
       .then(response => {
-        console.log(`response: ${response}`);
-        assert.deepEqual(response.body, { foo: 'bar' });
+        console.log(`response.body: ${response.body}`);
+        assert.deepEqual(JSON.parse(response.body), { foo: 'bar' });
       });
   });
 
@@ -56,8 +57,8 @@ describe('consul-client/bluebird', function() {
 
     return serviceRequest(requestConfig)
       .then(response => {
-        console.log(`response: ${response}`);
-        assert.deepEqual(response.body, { fooproxy: 'barproxy' });
+        console.log(`response.body: ${response.body}`);
+        assert.deepEqual(JSON.parse(response.body), { fooproxy: 'barproxy' });
       });
   });
 });
