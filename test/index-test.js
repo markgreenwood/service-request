@@ -2,25 +2,17 @@ const assert = require('assert');
 const format = require('util').format;
 const nock = require('nock');
 const serviceRequest = require('../index');
-const config = require('config');
 
-describe('consul-client/bluebird', function() {
-  const host = 'my.service.discovery.host.com';
-  const hostUrl = 'http://' + host;
+describe('serviceRequest', function() {
   const serviceName = 'testService';
   const endpoint = 'testEndpoint';
   const version = '1.0.0';
-  const sampleBody = {beep: 'boop'};
   const requestConfig = {
-    serviceName: 'testService',
-    version: '1.0.0',
-    endpoint: '/endpoint',
+    serviceName,
+    version,
+    endpoint,
     method: 'GET'
   };
-
-  // beforeEach(function () {
-  //   serviceRequest = null;
-  // });
 
   const address = 'test.service.com';
   const port = 4242;
