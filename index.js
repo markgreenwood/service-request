@@ -2,16 +2,13 @@ const Promise = require('bluebird');
 const got = require('got');
 const R = require('ramda');
 
-function serviceRequest(requestConfig) {
-  const name = R.propOr(null, 'serviceName', requestConfig);
-  const version = R.propOr(null, 'version', requestConfig);
+module.exports = (config) => (options) => {
+  const name = R.propOr(null, 'serviceName', config);
+  const version = R.propOr(null, 'version', config);
   let serviceUrl = 'badUrl';
 
-  if (name === 'testService' && version === '1.0.0') { serviceUrl = 'http://test.service.com:4242' + requestConfig.endpoint }
+  if (name === 'testService' && version === '1.0.0') { serviceUrl = 'http://test.service.com:4242/' + options.endpoint }
 
-  console.log(`serviceUrl: ${serviceUrl}\nrequestConfig: ${JSON.stringify(requestConfig, null, 2)}`);
-  return got(serviceUrl, requestConfig);
-}
-
-module.exports = serviceRequest;
+  return Promise.resolve(got(serviceUrl, options)).then((response) => { response.data = JSON.parse(response.body); return response; });
+};
 
